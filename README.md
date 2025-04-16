@@ -43,6 +43,7 @@ Queries and Explanations
 1.	Compare Salary with Previous and Next Employee
 This query uses LAG() and LEAD() to compare each employee’s salary with their previous and next records. The result helps identify trends in salary progression.
 
+```
 SELECT Employee_ID, Name, Department, Salary, 
        LAG(Salary) OVER (ORDER BY Employee_ID) AS Prev_Salary,
        LEAD(Salary) OVER (ORDER BY Employee_ID) AS Next_Salary,
@@ -52,7 +53,7 @@ SELECT Employee_ID, Name, Department, Salary,
            ELSE 'EQUAL'
        END AS Compared_to_Previous
 FROM Employees;
- 
+``` 
 
 Real-Life Application: This technique is useful in payroll analysis, where organizations track salary progression trends among employees.
 
@@ -60,46 +61,52 @@ Real-Life Application: This technique is useful in payroll analysis, where organ
 
 This query ranks employees based on their salary within each department, showing the difference between RANK() and DENSE_RANK().
 
+```
 SELECT Employee_ID, Name, Department, Salary,
        RANK() OVER (PARTITION BY Department ORDER BY Salary DESC) AS Rank_Salary,
        DENSE_RANK() OVER (PARTITION BY Department ORDER BY Salary DESC) AS Dense_Rank_Salary
 FROM Employees;
- 
+``` 
  
 Real-Life Application: Used in performance reviews and compensation benchmarking to identify top earners within each department.
 
 3. Get Top 3 Salaries per Department
 This query retrieves the top 3 salaries per department while handling duplicate salaries properly.
 
+```
 SELECT * FROM (
     SELECT Employee_ID, Name, Department, Salary,
            RANK() OVER (PARTITION BY Department ORDER BY Salary DESC) AS Rank_Salary
     FROM Employees
 ) WHERE Rank_Salary <= 3;
 
- 
+ ```
 
 Real-Life Application: Commonly used in HR analytics to reward the top performers within each department.
 
 4. Get First 2 Hired Employees per Department
 This query identifies the first two employees hired in each department using RANK().
 
+```
 SELECT * FROM (
     SELECT Employee_ID, Name, Department, Hire_Date,
            RANK() OVER (PARTITION BY Department ORDER BY Hire_Date ASC) AS Hire_Rank
     FROM Employees
 ) WHERE Hire_Rank <= 2;
-
+```
  
 Real-Life Application: Useful in workforce planning to analyze early hiring patterns and retention trends.
 
 5. Calculate Maximum Salary per Department and Overall
 This query calculates the highest salary within each department and across all employees using MAX() with window functions.
+
+```
 SELECT Employee_ID, Name, Department, Salary,
        MAX(Salary) OVER (PARTITION BY Department) AS Max_Salary_Department,
        MAX(Salary) OVER () AS Max_Salary_Overall
 FROM Employees;
- 
+
+```
 Real-Life Application: Helps HR teams determine department-wise salary ceilings and overall salary benchmarks within the company.
 
 Conclusion
